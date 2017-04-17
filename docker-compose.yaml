@@ -1,0 +1,35 @@
+version: '3'
+services:
+  influx:
+    image: influxdb
+    ports:
+      - "8086:8086"
+      - "8083:8083"
+    volumes:
+      - ./tmp/db:/var/lib/influxdb
+  grafana:
+    image: grafana/grafana
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./tmp/grafana:/var/lib/grafana
+    links:
+      - influx
+  risb:
+    image: golang:1.8
+    volumes:
+      - .:/go/src/github/patrobinson/running_is_beautiful
+    working_dir: /go/src/github/patrobinson/running_is_beautiful
+    depends_on:
+      - influx
+    links:
+      - influx
+    environment:
+      INFLUX_HOSTNAME: influx
+      INFLUX_PORT: 8086
+      DB_NAME: "risb"
+      STRAVA_ACCESS_TOKEN: ${STRAVA_ACCESS_TOKEN}
+    command:
+      - scripts/run_dev.sh
