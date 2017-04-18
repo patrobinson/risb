@@ -53,7 +53,7 @@ func getActivityStream(activity strava.ActivitySummary, streams *strava.Activity
 	for i, t := range streamSets.Time.RawData {
 		elapsed := (*t - previousTime)
 		data := dataPoint{
-			name: "run",
+			name: activity.Type.String(),
 			tags: map[string]string{
 				"Id": strconv.FormatInt(activity.Id, 10),
 				"Athlete": strconv.FormatInt(activity.Athlete.AthleteMeta.Id, 10),
