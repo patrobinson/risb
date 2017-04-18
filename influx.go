@@ -7,17 +7,22 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func sink(rawData dataPoint) error {
+var iClient client.Client
+
+func setupInflux() {
 	iAddr := "http://" + os.Getenv("INFLUX_HOSTNAME") + ":" + os.Getenv("INFLUX_PORT")
 	conf := client.HTTPConfig{
     	Addr: iAddr,
 	}
 
-	c, err := client.NewHTTPClient(conf)
+	var err error
+	iClient, err = client.NewHTTPClient(conf)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
+func sink(rawData dataPoint) error {
 	precision, err := precisionToString(rawData.precision)
 	if err != nil {
 		return err
@@ -48,7 +53,7 @@ func sink(rawData dataPoint) error {
 		log.Fatal(err)
 	}
 	bp.AddPoint(pt)
-	if err := c.Write(bp); err != nil {
+	if err := iClient.Write(bp); err != nil {
 		log.Fatal(err)
 	}
 	return nil
