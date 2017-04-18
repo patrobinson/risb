@@ -68,7 +68,6 @@ func getActivityStream(activity strava.ActivitySummary, streams *strava.Activity
 		}
 		if distance := streamSets.Distance.RawData[i]; distance != nil {
 			data.values["Distance"] = *distance
-			data.values["MinutesPerKM"] = (((1000 / *distance) * float64(elapsed)) / 60)
 		}
 		if speed := streamSets.Speed.RawData[i]; speed != nil {
 			data.values["MetersPerSecond"] = *speed
