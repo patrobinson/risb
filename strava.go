@@ -66,20 +66,30 @@ func getActivityStream(activity strava.ActivitySummary, streams *strava.Activity
 				"Time": float64(*t),
 			},
 		}
-		if distance := streamSets.Distance.RawData[i]; distance != nil {
-			data.values["Distance"] = *distance
+		if streamSets.Distance != nil {
+			if distance := streamSets.Distance.RawData[i]; distance != nil {
+				data.values["Distance"] = *distance
+			}
 		}
-		if speed := streamSets.Speed.RawData[i]; speed != nil {
-			data.values["MetersPerSecond"] = *speed
+		if streamSets.Speed != nil {
+			if speed := streamSets.Speed.RawData[i]; speed != nil {
+				data.values["MetersPerSecond"] = *speed
+			}
 		}
-		if altitude := streamSets.Elevation.RawData[i]; altitude != nil {
-			data.values["Altitude"] = *altitude
+		if streamSets.Elevation != nil {
+			if altitude := streamSets.Elevation.RawData[i]; altitude != nil {
+				data.values["Altitude"] = *altitude
+			}
 		}
-		if heartrate := streamSets.HeartRate.RawData[i]; heartrate != nil {
-			data.values["HeartRate"] = float64(*heartrate)
+		if streamSets.HeartRate != nil {
+			if heartrate := streamSets.HeartRate.RawData[i]; heartrate != nil {
+				data.values["HeartRate"] = float64(*heartrate)
+			}
 		}
-		if grade := streamSets.Grade.RawData[i]; grade != nil {
-			data.values["Grade"] = *grade
+		if streamSets.Grade != nil {
+			if grade := streamSets.Grade.RawData[i]; grade != nil {
+				data.values["Grade"] = *grade
+			}
 		}
 		data.tags["Moving"] = strconv.FormatBool(streamSets.Moving.Data[i])
 		previousTime = *t
