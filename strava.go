@@ -50,6 +50,8 @@ func getActivityStream(activity strava.ActivitySummary, streams *strava.Activity
 	}
 	var previousTime int
 	previousTime = 0
+	var previousDistance float64
+	previousDistance = 0
 	for i, t := range streamSets.Time.RawData {
 		elapsed := (*t - previousTime)
 		data := dataPoint{
@@ -67,8 +69,10 @@ func getActivityStream(activity strava.ActivitySummary, streams *strava.Activity
 			},
 		}
 		if streamSets.Distance != nil {
-			if distance := streamSets.Distance.RawData[i]; distance != nil {
-				data.values["Distance"] = *distance
+			if nDistance := streamSets.Distance.RawData[i]; nDistance != nil {
+				distance := (*nDistance - previousDistance)
+				previousDistance = *nDistance
+				data.values["Distance"] = distance
 			}
 		}
 		if streamSets.Speed != nil {
