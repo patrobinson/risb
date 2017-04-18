@@ -4,7 +4,6 @@ import (
 	"github.com/strava/go.strava"
 	"os"
 	"strconv"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"time"
 )

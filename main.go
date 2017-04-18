@@ -2,7 +2,7 @@ package main
 
 import (
 	"time"
-	"fmt"
+	log "github.com/sirupsen/logrus"
 )
 
 type run struct {
@@ -17,7 +17,12 @@ type dataPoint struct {
 	values map[string]float64
 }
 
+func init() {
+	log.SetLevel(log.InfoLevel)
+}
+
 func main() {
-	fmt.Printf("Starting...\n")
+	log.Info("Starting...\n")
+	setupInflux()
 	pull()
 }
