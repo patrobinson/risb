@@ -8,14 +8,15 @@ import (
 	"time"
 )
 
-func pull() {
+func pull(lastRecord int64) {
 	log.Info("Pulling...\n")
 	accessToken := os.Getenv("STRAVA_ACCESS_TOKEN")
 	client := strava.NewClient(accessToken)
 	cAthlete := strava.NewCurrentAthleteService(client)
+	lastTimestamp := int(lastRecord)
 	page := 1
 	for {
-		summaries, err := cAthlete.ListActivities().Page(page).PerPage(200).Do()
+		summaries, err := cAthlete.ListActivities().After(lastTimestamp).Page(page).PerPage(200).Do()
 		if err != nil {
 			log.Fatal("Failed to get activities %v", err)
 		}

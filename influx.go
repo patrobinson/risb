@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	log "github.com/sirupsen/logrus"
+	"encoding/json"
+	"strconv"
 )
 
 var iClient client.Client
@@ -20,6 +22,36 @@ func setupInflux() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func lastRecord() (int64, error) {
+	q := client.NewQuery("SELECT LAST(Time) FROM Run", "risb", "s")
+
+	// Set the last record to The Epoch by default
+    emptyResponse := int64(0)
+
+	if response, err := iClient.Query(q); err == nil {
+		if response.Error() != nil {
+			return emptyResponse, response.Error()
+		}
+		lastTimestamp := response.Results[0].Series[0].Values[0][0].(json.Number)
+		i64, _ := strconv.ParseInt(string(lastTimestamp), 10, 64)
+		return i64, nil
+	} else {
+		return emptyResponse, err
+	}
+
+	return emptyResponse, nil
+}
+
+func extractUniqueIdTags(results []client.Result) []string {
+	var uniqueIds []string
+	for _, result := range results {
+		for _, row := range result.Series {
+			uniqueIds = append(uniqueIds, row.Tags["Id"])
+		}
+	}
+	return uniqueIds
 }
 
 func sink(rawData dataPoint) error {

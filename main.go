@@ -24,5 +24,10 @@ func init() {
 func main() {
 	log.Info("Starting...\n")
 	setupInflux()
-	pull()
+	lastRecordTime, err := lastRecord()
+	if err != nil {
+		log.Fatal("Failed to get a latest record from Influx: %v", err)
+	}
+	log.Info("Found the latest record retrieved:\n%v", lastRecordTime)
+	pull(lastRecordTime)
 }
