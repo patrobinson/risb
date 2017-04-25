@@ -34,9 +34,12 @@ func lastRecord() (int64, error) {
 		if response.Error() != nil {
 			return emptyResponse, response.Error()
 		}
-		lastTimestamp := response.Results[0].Series[0].Values[0][0].(json.Number)
-		i64, _ := strconv.ParseInt(string(lastTimestamp), 10, 64)
-		return i64, nil
+		if len(response.Results) > 0 && len(response.Results[0].Series) > 0 && len(response.Results[0].Series[0].Values) > 0 {
+			lastTimestamp := response.Results[0].Series[0].Values[0][0].(json.Number)
+			i64, _ := strconv.ParseInt(string(lastTimestamp), 10, 64)
+			return i64, nil
+		}
+		// Fall through to the default
 	} else {
 		return emptyResponse, err
 	}
