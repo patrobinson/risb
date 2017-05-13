@@ -62,12 +62,12 @@ func getActivityStream(activity strava.ActivitySummary, streams *strava.Activity
 				"Athlete": strconv.FormatInt(activity.Athlete.AthleteMeta.Id, 10),
 				"MovingTime": strconv.Itoa(activity.MovingTime),
 				"ElapsedTime": strconv.Itoa(activity.ElapsedTime),
-				"ActivityDistance": strconv.FormatFloat(activity.Distance, 'f', -1, 64),
 			},
 			timestamp: activity.StartDate.Add(time.Second * time.Duration(*t)),
 			precision: elapsed,
 			values: map[string]float64{
 				"Time": float64(*t),
+				"ActivityDistance": activity.Distance,
 			},
 		}
 		if streamSets.Distance != nil {
